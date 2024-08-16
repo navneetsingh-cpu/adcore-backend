@@ -196,7 +196,4 @@ async def delete_course(course_id: str):
     return {"status": "success"}
 
 
-if __name__ == "__main__":
-    import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=PORT)
