@@ -147,7 +147,7 @@ async def get_courses(
     course_name: Optional[str] = None,
     course_description: Optional[str] = None,
     skip: int = 0,
-    limit: int = 10,
+    limit: int = 100,
 ):
     query = {}
     if university:
