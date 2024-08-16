@@ -19,10 +19,11 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from datetime import datetime as api_datetime
 
+
 CSV_URL = "https://api.mockaroo.com/api/501b2790?count=100&key=8683a1c0"
 DB_NAME = "adcore"
 COLLECTION_NAME = "courses"
-MONGO_URI = "mongodb+srv://hunnyhunnyhunny:voIUd13MmKgKNVPo@cluster0.hqxrzv5.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URI = os.environ.get('MONGO_URI')
 DATA_EXPIRYTIME_IN_MINUTES = 10
 INTERVAL_TO_CHECK_DATA_EXPIRY_IN_MINUTES = 1
 
@@ -108,6 +109,7 @@ def fetch_and_store_data():
 
 
 def check_data_expiration():
+    fetch_and_store_data()
     if collection.count_documents({}) == 0:
         print("data expired!")
         fetch_and_store_data()
