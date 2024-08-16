@@ -18,13 +18,14 @@ from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 from datetime import datetime as api_datetime
+from fastapi.middleware.cors import CORSMiddleware
 
 
 CSV_URL = "https://api.mockaroo.com/api/501b2790?count=100&key=8683a1c0"
 DB_NAME = "adcore"
 COLLECTION_NAME = "courses"
-MONGO_URI = os.environ.get('MONGO_URI')
-PORT = os.environ.get('PORT') or 8000;
+MONGO_URI = os.environ.get("MONGO_URI")
+PORT = os.environ.get("PORT") or 8000
 
 DATA_EXPIRYTIME_IN_MINUTES = 10
 INTERVAL_TO_CHECK_DATA_EXPIRY_IN_MINUTES = 1
@@ -73,6 +74,22 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 
 app = FastAPI()
+
+origins = [
+    "https://adcore-fullstack.netlify.app/",
+    "http://adcore-fullstack.netlify.app/",
+    "http://localhost",
+    "http://localhost:8080",
+    "http://localhost:4200",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
@@ -129,6 +146,7 @@ api_client = AsyncIOMotorClient(MONGO_URI)
 api_db = api_client[DB_NAME]
 api_collection = api_db[COLLECTION_NAME]
 
+
 @app.on_event("startup")
 async def startup_event():
     check_data_expiration()
@@ -162,10 +180,7 @@ async def get_courses(
         query["CourseDescription"] = {"$regex": CourseDescription, "$options": "i"}
 
     courses = (
-        await api_collection.find(query)
-        .skip(skip)
-        .limit(limit)
-        .to_list(length=limit)
+        await api_collection.find(query).skip(skip).limit(limit).to_list(length=limit)
     )
     return [course_serializer(course) for course in courses]
 
@@ -194,6 +209,3 @@ async def delete_course(course_id: str):
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Course not found")
     return {"status": "success"}
-
-
-
