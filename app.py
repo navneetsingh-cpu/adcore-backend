@@ -24,6 +24,8 @@ CSV_URL = "https://api.mockaroo.com/api/501b2790?count=100&key=8683a1c0"
 DB_NAME = "adcore"
 COLLECTION_NAME = "courses"
 MONGO_URI = os.environ.get('MONGO_URI')
+PORT = os.environ.get('PORT') or 8000;
+
 DATA_EXPIRYTIME_IN_MINUTES = 10
 INTERVAL_TO_CHECK_DATA_EXPIRY_IN_MINUTES = 1
 
@@ -197,4 +199,4 @@ async def delete_course(course_id: str):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
