@@ -31,27 +31,27 @@ INTERVAL_TO_CHECK_DATA_EXPIRY_IN_MINUTES = 1
 
 
 class Course(BaseModel):
-    university: str
-    city: str
-    country: str
-    course_name: str
-    course_description: str
-    start_date: api_datetime
-    end_date: api_datetime
-    price: float
-    currency: str
+    University: str
+    City: str
+    Country: str
+    CourseName: str
+    CourseDescription: str
+    StartDate: api_datetime
+    EndDate: api_datetime
+    Price: float
+    Currency: str
 
 
 class UpdateCourseModel(BaseModel):
-    university: Optional[str] = None
-    city: Optional[str] = None
-    country: Optional[str] = None
-    course_name: Optional[str] = None
-    course_description: Optional[str] = None
-    start_date: Optional[api_datetime] = None
-    end_date: Optional[api_datetime] = None
-    price: Optional[float] = None
-    currency: Optional[str] = None
+    University: Optional[str] = None
+    City: Optional[str] = None
+    Country: Optional[str] = None
+    CourseName: Optional[str] = None
+    CourseDescription: Optional[str] = None
+    StartDate: Optional[api_datetime] = None
+    EndDate: Optional[api_datetime] = None
+    Price: Optional[float] = None
+    Currency: Optional[str] = None
 
 
 def course_serializer(course) -> dict:
@@ -141,25 +141,25 @@ async def root():
 
 @app.get("/courses/")
 async def get_courses(
-    university: Optional[str] = None,
-    city: Optional[str] = None,
-    country: Optional[str] = None,
-    course_name: Optional[str] = None,
-    course_description: Optional[str] = None,
+    University: Optional[str] = None,
+    City: Optional[str] = None,
+    Country: Optional[str] = None,
+    CourseName: Optional[str] = None,
+    CourseDescription: Optional[str] = None,
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 999999,
 ):
     query = {}
-    if university:
-        query["university"] = {"$regex": university, "$options": "i"}
-    if city:
-        query["city"] = {"$regex": city, "$options": "i"}
-    if country:
-        query["country"] = {"$regex": country, "$options": "i"}
-    if course_name:
-        query["course_name"] = {"$regex": course_name, "$options": "i"}
-    if course_description:
-        query["course_description"] = {"$regex": course_description, "$options": "i"}
+    if University:
+        query["University"] = {"$regex": University, "$options": "i"}
+    if City:
+        query["City"] = {"$regex": City, "$options": "i"}
+    if Country:
+        query["Country"] = {"$regex": Country, "$options": "i"}
+    if CourseName:
+        query["CourseName"] = {"$regex": CourseName, "$options": "i"}
+    if CourseDescription:
+        query["CourseDescription"] = {"$regex": CourseDescription, "$options": "i"}
 
     courses = (
         await api_collection.find(query)
